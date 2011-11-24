@@ -143,7 +143,9 @@ autolink_ragel(VALUE self, VALUE data) {
   unsigned char *p = RSTRING_PTR(data);
   unsigned char *pe = p + RSTRING_LEN(data);
   unsigned char *eof = pe;
-  
+
+  in_anchor = in_email = in_img = in_object = 0;
+
   %% write init;
   %% write exec;
   return output;

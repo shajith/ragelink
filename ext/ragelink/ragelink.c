@@ -44,9 +44,11 @@ autolink_ragel(VALUE self, VALUE data) {
   unsigned char *p = RSTRING_PTR(data);
   unsigned char *pe = p + RSTRING_LEN(data);
   unsigned char *eof = pe;
+
+  in_anchor = in_email = in_img = in_object = 0;
+
   
-  
-#line 50 "ext/ragelink/ragelink.c"
+#line 52 "ext/ragelink/ragelink.c"
 	{
 	cs = autolink_start;
 	ts = 0;
@@ -54,9 +56,9 @@ autolink_ragel(VALUE self, VALUE data) {
 	act = 0;
 	}
 
-#line 148 "ext/ragel/url.rl"
+#line 150 "ext/ragel/url.rl"
   
-#line 60 "ext/ragelink/ragelink.c"
+#line 62 "ext/ragelink/ragelink.c"
 	{
 	if ( p == pe )
 		goto _test_eof;
@@ -208,7 +210,7 @@ st2831:
 case 2831:
 #line 1 "NONE"
 	{ts = p;}
-#line 212 "ext/ragelink/ragelink.c"
+#line 214 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 32u: goto tr2737;
 		case 60u: goto tr2739;
@@ -276,7 +278,7 @@ st2832:
 	if ( ++p == pe )
 		goto _test_eof2832;
 case 2832:
-#line 280 "ext/ragelink/ragelink.c"
+#line 282 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 46u: goto st0;
 		case 64u: goto tr1267;
@@ -3025,7 +3027,7 @@ st2833:
 	if ( ++p == pe )
 		goto _test_eof2833;
 case 2833:
-#line 3029 "ext/ragelink/ragelink.c"
+#line 3031 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 46u: goto st0;
 		case 47u: goto tr1076;
@@ -3087,7 +3089,7 @@ st2834:
 	if ( ++p == pe )
 		goto _test_eof2834;
 case 2834:
-#line 3091 "ext/ragelink/ragelink.c"
+#line 3093 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 37u: goto tr1076;
 		case 40u: goto st191;
@@ -3221,7 +3223,7 @@ st2835:
 	if ( ++p == pe )
 		goto _test_eof2835;
 case 2835:
-#line 3225 "ext/ragelink/ragelink.c"
+#line 3227 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 37u: goto tr200;
 		case 43u: goto tr200;
@@ -3289,7 +3291,7 @@ st2836:
 	if ( ++p == pe )
 		goto _test_eof2836;
 case 2836:
-#line 3293 "ext/ragelink/ragelink.c"
+#line 3295 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 124u: goto tr606;
 		case 194u: goto st565;
@@ -3346,7 +3348,7 @@ st2837:
 	if ( ++p == pe )
 		goto _test_eof2837;
 case 2837:
-#line 3350 "ext/ragelink/ragelink.c"
+#line 3352 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 61u: goto tr2831;
 		case 124u: goto tr606;
@@ -3404,7 +3406,7 @@ st2838:
 	if ( ++p == pe )
 		goto _test_eof2838;
 case 2838:
-#line 3408 "ext/ragelink/ragelink.c"
+#line 3410 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 124u: goto tr267;
 		case 194u: goto st195;
@@ -3461,7 +3463,7 @@ st2839:
 	if ( ++p == pe )
 		goto _test_eof2839;
 case 2839:
-#line 3465 "ext/ragelink/ragelink.c"
+#line 3467 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 38u: goto st192;
 		case 124u: goto tr267;
@@ -8393,9 +8395,9 @@ st569:
 	if ( ++p == pe )
 		goto _test_eof569;
 case 569:
-	if ( 128u <= (*p) )
-		goto tr606;
-	goto tr198;
+	if ( (*p) <= 127u )
+		goto tr198;
+	goto tr606;
 st570:
 	if ( ++p == pe )
 		goto _test_eof570;
@@ -15486,9 +15488,9 @@ st1125:
 	if ( ++p == pe )
 		goto _test_eof1125;
 case 1125:
-	if ( 128u <= (*p) )
-		goto tr1076;
-	goto tr198;
+	if ( (*p) <= 127u )
+		goto tr198;
+	goto tr1076;
 st1126:
 	if ( ++p == pe )
 		goto _test_eof1126;
@@ -18247,7 +18249,7 @@ st2840:
 	if ( ++p == pe )
 		goto _test_eof2840;
 case 2840:
-#line 18251 "ext/ragelink/ragelink.c"
+#line 18253 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 47u: goto st1314;
 		case 97u: goto st1325;
@@ -18415,7 +18417,7 @@ st2841:
 	if ( ++p == pe )
 		goto _test_eof2841;
 case 2841:
-#line 18419 "ext/ragelink/ragelink.c"
+#line 18421 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 46u: goto st0;
 		case 64u: goto tr1267;
@@ -18680,7 +18682,7 @@ st2842:
 	if ( ++p == pe )
 		goto _test_eof2842;
 case 2842:
-#line 18684 "ext/ragelink/ragelink.c"
+#line 18686 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1341;
 		case 46u: goto st1340;
@@ -18758,7 +18760,7 @@ st2843:
 	if ( ++p == pe )
 		goto _test_eof2843;
 case 2843:
-#line 18762 "ext/ragelink/ragelink.c"
+#line 18764 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 194u: goto st1342;
 		case 195u: goto st1343;
@@ -18848,9 +18850,9 @@ st1346:
 	if ( ++p == pe )
 		goto _test_eof1346;
 case 1346:
-	if ( 128u <= (*p) )
-		goto tr1298;
-	goto tr198;
+	if ( (*p) <= 127u )
+		goto tr198;
+	goto tr1298;
 st1347:
 	if ( ++p == pe )
 		goto _test_eof1347;
@@ -21160,7 +21162,7 @@ st2844:
 	if ( ++p == pe )
 		goto _test_eof2844;
 case 2844:
-#line 21164 "ext/ragelink/ragelink.c"
+#line 21166 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1341;
 		case 37u: goto tr2361;
@@ -21295,7 +21297,7 @@ st2845:
 	if ( ++p == pe )
 		goto _test_eof2845;
 case 2845:
-#line 21299 "ext/ragelink/ragelink.c"
+#line 21301 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1341;
 		case 37u: goto tr1485;
@@ -21364,7 +21366,7 @@ st2846:
 	if ( ++p == pe )
 		goto _test_eof2846;
 case 2846:
-#line 21368 "ext/ragelink/ragelink.c"
+#line 21370 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1341;
 		case 124u: goto tr1891;
@@ -21422,7 +21424,7 @@ st2847:
 	if ( ++p == pe )
 		goto _test_eof2847;
 case 2847:
-#line 21426 "ext/ragelink/ragelink.c"
+#line 21428 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1341;
 		case 61u: goto tr2894;
@@ -21481,7 +21483,7 @@ st2848:
 	if ( ++p == pe )
 		goto _test_eof2848;
 case 2848:
-#line 21485 "ext/ragelink/ragelink.c"
+#line 21487 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1341;
 		case 124u: goto tr1552;
@@ -21539,7 +21541,7 @@ st2849:
 	if ( ++p == pe )
 		goto _test_eof2849;
 case 2849:
-#line 21543 "ext/ragelink/ragelink.c"
+#line 21545 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1341;
 		case 38u: goto st1528;
@@ -21786,9 +21788,9 @@ st1535:
 	if ( ++p == pe )
 		goto _test_eof1535;
 case 1535:
-	if ( 128u <= (*p) )
-		goto tr1552;
-	goto tr198;
+	if ( (*p) <= 127u )
+		goto tr198;
+	goto tr1552;
 st1536:
 	if ( ++p == pe )
 		goto _test_eof1536;
@@ -24129,9 +24131,9 @@ st1720:
 	if ( ++p == pe )
 		goto _test_eof1720;
 case 1720:
-	if ( 128u <= (*p) )
-		goto st1529;
-	goto tr198;
+	if ( (*p) <= 127u )
+		goto tr198;
+	goto st1529;
 st1721:
 	if ( ++p == pe )
 		goto _test_eof1721;
@@ -28815,9 +28817,9 @@ st2090:
 	if ( ++p == pe )
 		goto _test_eof2090;
 case 2090:
-	if ( 128u <= (*p) )
-		goto tr1485;
-	goto tr198;
+	if ( (*p) <= 127u )
+		goto tr198;
+	goto tr1485;
 st2091:
 	if ( ++p == pe )
 		goto _test_eof2091;
@@ -31158,9 +31160,9 @@ st2275:
 	if ( ++p == pe )
 		goto _test_eof2275;
 case 2275:
-	if ( 128u <= (*p) )
-		goto st1527;
-	goto tr198;
+	if ( (*p) <= 127u )
+		goto tr198;
+	goto st1527;
 st2276:
 	if ( ++p == pe )
 		goto _test_eof2276;
@@ -35936,7 +35938,7 @@ st2850:
 	if ( ++p == pe )
 		goto _test_eof2850;
 case 2850:
-#line 35940 "ext/ragelink/ragelink.c"
+#line 35942 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 46u: goto st0;
 		case 64u: goto tr1267;
@@ -36167,7 +36169,7 @@ st2851:
 	if ( ++p == pe )
 		goto _test_eof2851;
 case 2851:
-#line 36171 "ext/ragelink/ragelink.c"
+#line 36173 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 46u: goto st2645;
 		case 47u: goto tr1076;
@@ -36260,9 +36262,9 @@ st2650:
 	if ( ++p == pe )
 		goto _test_eof2650;
 case 2650:
-	if ( (*p) <= 127u )
-		goto tr0;
-	goto tr2550;
+	if ( 128u <= (*p) )
+		goto tr2550;
+	goto tr0;
 st2651:
 	if ( ++p == pe )
 		goto _test_eof2651;
@@ -38574,7 +38576,7 @@ st2852:
 	if ( ++p == pe )
 		goto _test_eof2852;
 case 2852:
-#line 38578 "ext/ragelink/ragelink.c"
+#line 38580 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 170u: goto st1;
 		case 181u: goto st1;
@@ -38591,7 +38593,7 @@ st2853:
 	if ( ++p == pe )
 		goto _test_eof2853;
 case 2853:
-#line 38595 "ext/ragelink/ragelink.c"
+#line 38597 "ext/ragelink/ragelink.c"
 	if ( (*p) < 152u ) {
 		if ( 128u <= (*p) && (*p) <= 150u )
 			goto st1;
@@ -38611,7 +38613,7 @@ st2854:
 	if ( ++p == pe )
 		goto _test_eof2854;
 case 2854:
-#line 38615 "ext/ragelink/ragelink.c"
+#line 38617 "ext/ragelink/ragelink.c"
 	goto st1;
 tr2745:
 #line 1 "NONE"
@@ -38623,7 +38625,7 @@ st2855:
 	if ( ++p == pe )
 		goto _test_eof2855;
 case 2855:
-#line 38627 "ext/ragelink/ragelink.c"
+#line 38629 "ext/ragelink/ragelink.c"
 	if ( 192u <= (*p) )
 		goto tr2774;
 	goto st1;
@@ -38637,7 +38639,7 @@ st2856:
 	if ( ++p == pe )
 		goto _test_eof2856;
 case 2856:
-#line 38641 "ext/ragelink/ragelink.c"
+#line 38643 "ext/ragelink/ragelink.c"
 	if ( 128u <= (*p) )
 		goto st1;
 	goto tr2774;
@@ -38651,7 +38653,7 @@ st2857:
 	if ( ++p == pe )
 		goto _test_eof2857;
 case 2857:
-#line 38655 "ext/ragelink/ragelink.c"
+#line 38657 "ext/ragelink/ragelink.c"
 	if ( (*p) == 173u )
 		goto tr2774;
 	if ( (*p) < 146u ) {
@@ -38676,7 +38678,7 @@ st2858:
 	if ( ++p == pe )
 		goto _test_eof2858;
 case 2858:
-#line 38680 "ext/ragelink/ragelink.c"
+#line 38682 "ext/ragelink/ragelink.c"
 	if ( (*p) == 133u )
 		goto st1;
 	if ( (*p) < 182u ) {
@@ -38698,7 +38700,7 @@ st2859:
 	if ( ++p == pe )
 		goto _test_eof2859;
 case 2859:
-#line 38702 "ext/ragelink/ragelink.c"
+#line 38704 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 134u: goto st1;
 		case 140u: goto st1;
@@ -38722,7 +38724,7 @@ st2860:
 	if ( ++p == pe )
 		goto _test_eof2860;
 case 2860:
-#line 38726 "ext/ragelink/ragelink.c"
+#line 38728 "ext/ragelink/ragelink.c"
 	if ( (*p) == 182u )
 		goto tr2774;
 	goto st1;
@@ -38736,7 +38738,7 @@ st2861:
 	if ( ++p == pe )
 		goto _test_eof2861;
 case 2861:
-#line 38740 "ext/ragelink/ragelink.c"
+#line 38742 "ext/ragelink/ragelink.c"
 	if ( 130u <= (*p) && (*p) <= 137u )
 		goto tr2774;
 	goto st1;
@@ -38750,7 +38752,7 @@ st2862:
 	if ( ++p == pe )
 		goto _test_eof2862;
 case 2862:
-#line 38754 "ext/ragelink/ragelink.c"
+#line 38756 "ext/ragelink/ragelink.c"
 	if ( 164u <= (*p) && (*p) <= 176u )
 		goto tr2774;
 	goto st1;
@@ -38764,7 +38766,7 @@ st2863:
 	if ( ++p == pe )
 		goto _test_eof2863;
 case 2863:
-#line 38768 "ext/ragelink/ragelink.c"
+#line 38770 "ext/ragelink/ragelink.c"
 	if ( (*p) > 152u ) {
 		if ( 154u <= (*p) && (*p) <= 160u )
 			goto tr2774;
@@ -38781,7 +38783,7 @@ st2864:
 	if ( ++p == pe )
 		goto _test_eof2864;
 case 2864:
-#line 38785 "ext/ragelink/ragelink.c"
+#line 38787 "ext/ragelink/ragelink.c"
 	if ( (*p) == 190u )
 		goto tr2774;
 	if ( (*p) > 175u ) {
@@ -38800,7 +38802,7 @@ st2865:
 	if ( ++p == pe )
 		goto _test_eof2865;
 case 2865:
-#line 38804 "ext/ragelink/ragelink.c"
+#line 38806 "ext/ragelink/ragelink.c"
 	if ( (*p) == 135u )
 		goto st1;
 	if ( (*p) < 132u ) {
@@ -38825,7 +38827,7 @@ st2866:
 	if ( ++p == pe )
 		goto _test_eof2866;
 case 2866:
-#line 38829 "ext/ragelink/ragelink.c"
+#line 38831 "ext/ragelink/ragelink.c"
 	if ( (*p) > 154u ) {
 		if ( 161u <= (*p) && (*p) <= 191u )
 			goto st1;
@@ -38842,7 +38844,7 @@ st2867:
 	if ( ++p == pe )
 		goto _test_eof2867;
 case 2867:
-#line 38846 "ext/ragelink/ragelink.c"
+#line 38848 "ext/ragelink/ragelink.c"
 	if ( (*p) < 153u ) {
 		if ( 128u <= (*p) && (*p) <= 151u )
 			goto st1;
@@ -38862,7 +38864,7 @@ st2868:
 	if ( ++p == pe )
 		goto _test_eof2868;
 case 2868:
-#line 38866 "ext/ragelink/ragelink.c"
+#line 38868 "ext/ragelink/ragelink.c"
 	if ( (*p) == 148u )
 		goto tr2774;
 	if ( (*p) < 176u ) {
@@ -38890,7 +38892,7 @@ st2869:
 	if ( ++p == pe )
 		goto _test_eof2869;
 case 2869:
-#line 38894 "ext/ragelink/ragelink.c"
+#line 38896 "ext/ragelink/ragelink.c"
 	if ( 144u <= (*p) && (*p) <= 191u )
 		goto st1;
 	goto tr2774;
@@ -38904,7 +38906,7 @@ st2870:
 	if ( ++p == pe )
 		goto _test_eof2870;
 case 2870:
-#line 38908 "ext/ragelink/ragelink.c"
+#line 38910 "ext/ragelink/ragelink.c"
 	if ( 141u <= (*p) )
 		goto st1;
 	goto tr2774;
@@ -38918,7 +38920,7 @@ st2871:
 	if ( ++p == pe )
 		goto _test_eof2871;
 case 2871:
-#line 38922 "ext/ragelink/ragelink.c"
+#line 38924 "ext/ragelink/ragelink.c"
 	if ( 178u <= (*p) )
 		goto tr2774;
 	goto st1;
@@ -38932,7 +38934,7 @@ st2872:
 	if ( ++p == pe )
 		goto _test_eof2872;
 case 2872:
-#line 38936 "ext/ragelink/ragelink.c"
+#line 38938 "ext/ragelink/ragelink.c"
 	if ( (*p) == 186u )
 		goto st1;
 	if ( (*p) > 170u ) {
@@ -38951,7 +38953,7 @@ st2873:
 	if ( ++p == pe )
 		goto _test_eof2873;
 case 2873:
-#line 38955 "ext/ragelink/ragelink.c"
+#line 38957 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 164u: goto st24;
 		case 165u: goto st25;
@@ -38992,7 +38994,7 @@ st2874:
 	if ( ++p == pe )
 		goto _test_eof2874;
 case 2874:
-#line 38996 "ext/ragelink/ragelink.c"
+#line 38998 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 128u: goto st52;
 		case 129u: goto st53;
@@ -39057,7 +39059,7 @@ st2875:
 	if ( ++p == pe )
 		goto _test_eof2875;
 case 2875:
-#line 39061 "ext/ragelink/ragelink.c"
+#line 39063 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 129u: goto st92;
 		case 130u: goto st93;
@@ -39087,7 +39089,7 @@ st2876:
 	if ( ++p == pe )
 		goto _test_eof2876;
 case 2876:
-#line 39091 "ext/ragelink/ragelink.c"
+#line 39093 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 128u: goto st108;
 		case 129u: goto st66;
@@ -39112,7 +39114,7 @@ st2877:
 	if ( ++p == pe )
 		goto _test_eof2877;
 case 2877:
-#line 39116 "ext/ragelink/ragelink.c"
+#line 39118 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 182u: goto st115;
 		case 183u: goto tr2774;
@@ -39129,7 +39131,7 @@ st2878:
 	if ( ++p == pe )
 		goto _test_eof2878;
 case 2878:
-#line 39133 "ext/ragelink/ragelink.c"
+#line 39135 "ext/ragelink/ragelink.c"
 	goto st4;
 tr2769:
 #line 1 "NONE"
@@ -39141,7 +39143,7 @@ st2879:
 	if ( ++p == pe )
 		goto _test_eof2879;
 case 2879:
-#line 39145 "ext/ragelink/ragelink.c"
+#line 39147 "ext/ragelink/ragelink.c"
 	if ( (*p) == 191u )
 		goto st118;
 	if ( 192u <= (*p) )
@@ -39157,7 +39159,7 @@ st2880:
 	if ( ++p == pe )
 		goto _test_eof2880;
 case 2880:
-#line 39161 "ext/ragelink/ragelink.c"
+#line 39163 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 128u: goto st6;
 		case 146u: goto st120;
@@ -39198,7 +39200,7 @@ st2881:
 	if ( ++p == pe )
 		goto _test_eof2881;
 case 2881:
-#line 39202 "ext/ragelink/ragelink.c"
+#line 39204 "ext/ragelink/ragelink.c"
 	if ( (*p) == 158u )
 		goto st134;
 	if ( 159u <= (*p) )
@@ -39214,7 +39216,7 @@ st2882:
 	if ( ++p == pe )
 		goto _test_eof2882;
 case 2882:
-#line 39218 "ext/ragelink/ragelink.c"
+#line 39220 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 164u: goto st6;
 		case 168u: goto st136;
@@ -39249,7 +39251,7 @@ st2883:
 	if ( ++p == pe )
 		goto _test_eof2883;
 case 2883:
-#line 39253 "ext/ragelink/ragelink.c"
+#line 39255 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 144u: goto st153;
 		case 146u: goto st168;
@@ -45039,7 +45041,7 @@ case 2883:
 
 	}
 
-#line 149 "ext/ragel/url.rl"
+#line 151 "ext/ragel/url.rl"
   return output;
 }
 
