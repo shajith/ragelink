@@ -57,6 +57,10 @@ void Init_ragelink();
     start_object = "<object ";
     end_object = "</object>";
 
+    email_user_char = alnum | [.!#\$%+\-];
+    email_host_char = alnum | "-";
+    email = email_user_char+ "@" email_host_char+ ("." email_host_char+)+;
+
       main := |*
         start_email => {
           in_email = 1;
@@ -112,6 +116,26 @@ void Init_ragelink();
             }
             rb_str_concat(output, anchor);
           }
+        };
+
+        email => {
+          //"<a href=\"mailto:#{text}\">#{display_text}</a>"
+          VALUE display_text;
+          VALUE email = rb_str_new(ts, te-ts);
+
+          if(rb_block_given_p()) {
+            display_text =  rb_yield(email);
+          } else {
+            display_text = email;
+          }
+
+          VALUE mailto = rb_str_new2("<a href=\"mailto:");
+          rb_str_concat(mailto, email);
+          rb_str_cat2(mailto, "\">");
+          rb_str_concat(mailto, display_text);
+          rb_str_cat2(mailto, "</a>");
+          
+          rb_str_concat(output, mailto);
         };
 
         any => {
