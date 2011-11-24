@@ -9,7 +9,7 @@ static int in_anchor, in_email, in_img, in_object, linking_mode;
 void Init_ragelink();
 
     
-#line 148 "ext/ragel/url.rl"
+#line 149 "ext/ragel/url.rl"
 
 
     
@@ -21,23 +21,11 @@ static const int autolink_error = -1;
 static const int autolink_en_main = 2849;
 
 
-#line 151 "ext/ragel/url.rl"
-
-static VALUE 
-make_url(VALUE url) {
-  VALUE href = rb_str_new2("");
-  rb_str_cat2(href, "<a href=\"");
-  rb_str_concat(href, url);
-  rb_str_cat2(href, "\">");
-  rb_str_concat(href, url);
-  rb_str_cat2(href, "</a>");
-  return href;
-}
-
+#line 152 "ext/ragel/url.rl"
 
 static VALUE 
   autolink_ragel(VALUE data, int mode, VALUE blk) {
-  VALUE output = rb_str_new2("");
+  VALUE output = rb_str_new2(""), call = rb_intern("call");
   long cs = 0, act = 0;
   linking_mode = mode;
 
@@ -50,7 +38,7 @@ static VALUE
   in_anchor = in_email = in_img = in_object = 0;
 
   
-#line 54 "ext/ragelink/ragelink.c"
+#line 42 "ext/ragelink/ragelink.c"
 	{
 	cs = autolink_start;
 	ts = 0;
@@ -58,9 +46,9 @@ static VALUE
 	act = 0;
 	}
 
-#line 179 "ext/ragel/url.rl"
+#line 168 "ext/ragel/url.rl"
   
-#line 64 "ext/ragelink/ragelink.c"
+#line 52 "ext/ragelink/ragelink.c"
 	{
 	if ( p == pe )
 		goto _test_eof;
@@ -72,53 +60,54 @@ tr0:
 	case 1:
 	{{p = ((te))-1;}
           in_email = 1;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }
 	break;
 	case 9:
 	{{p = ((te))-1;}
-          VALUE anchor;
-          VALUE url = rb_str_new(ts, te-ts);
+          VALUE url;
 
           if((linking_mode != 1) || (in_anchor | in_email | in_img | in_object)) {
-            rb_str_concat(output, rb_str_new(ts, te-ts));
+            rb_str_cat(output, ts, te-ts);
           } else {
             if(blk != !Qnil) {
-              anchor =  rb_funcall(blk, rb_intern("call"), 1, url);;
+              url = rb_str_new(ts, te-ts);
+              rb_str_concat(output, rb_funcall(blk, call, 1, url));
             } else {
-              anchor = make_url(url);
+              rb_str_cat(output, "<a href=\"", 9);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "\">", 2);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "</a>", 4);
             }
-            rb_str_concat(output, anchor);
+            
           }
         }
 	break;
 	case 10:
 	{{p = ((te))-1;}
-          //"<a href=\"mailto:#{text}\">#{display_text}</a>"
-          VALUE mailto;
-          VALUE email = rb_str_new(ts, te-ts);
+          VALUE email;
 
           if((linking_mode != 2) || in_anchor) {
-            rb_str_concat(output, email);
+            rb_str_cat(output, ts, te-ts);
           } else {
 
             if(blk != Qnil) {
-              mailto =  rb_funcall(blk, rb_intern("call"), 1, email);
+              email = rb_str_new(ts, te-ts);
+              rb_str_concat(output, rb_funcall(blk, call, 1, email));
             } else {
-              mailto = rb_str_new2("<a href=\"mailto:");
-              rb_str_concat(mailto, email);
-              rb_str_cat2(mailto, "\">");
-              rb_str_concat(mailto, email);
-              rb_str_cat2(mailto, "</a>");
+              rb_str_cat(output, "<a href=\"mailto:", 16);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "\">", 2);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "</a>", 4);
             }
-
-            rb_str_concat(output, mailto);
           }
         }
 	break;
 	case 11:
 	{{p = ((te))-1;}
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }
 	break;
 	}
@@ -127,128 +116,133 @@ tr0:
 tr58:
 #line 105 "ext/ragel/url.rl"
 	{{p = ((te))-1;}{
-          VALUE anchor;
-          VALUE url = rb_str_new(ts, te-ts);
+          VALUE url;
 
           if((linking_mode != 1) || (in_anchor | in_email | in_img | in_object)) {
-            rb_str_concat(output, rb_str_new(ts, te-ts));
+            rb_str_cat(output, ts, te-ts);
           } else {
             if(blk != !Qnil) {
-              anchor =  rb_funcall(blk, rb_intern("call"), 1, url);;
+              url = rb_str_new(ts, te-ts);
+              rb_str_concat(output, rb_funcall(blk, call, 1, url));
             } else {
-              anchor = make_url(url);
+              rb_str_cat(output, "<a href=\"", 9);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "\">", 2);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "</a>", 4);
             }
-            rb_str_concat(output, anchor);
+            
           }
         }}
 	goto st2849;
 tr1284:
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{{p = ((te))-1;}{
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr1290:
 #line 80 "ext/ragel/url.rl"
 	{te = p+1;{
           in_anchor = 0;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr1293:
 #line 90 "ext/ragel/url.rl"
 	{te = p+1;{
           in_img = 0;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr1299:
 #line 100 "ext/ragel/url.rl"
 	{te = p+1;{
           in_object = 0;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr1300:
 #line 75 "ext/ragel/url.rl"
 	{te = p+1;{
           in_anchor = 1;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr1303:
 #line 85 "ext/ragel/url.rl"
 	{te = p+1;{
           in_img = 1;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr1309:
 #line 95 "ext/ragel/url.rl"
 	{te = p+1;{
           in_object = 1;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr2756:
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{te = p+1;{
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr2757:
 #line 70 "ext/ragel/url.rl"
 	{te = p+1;{
           in_email = 0;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr2795:
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{te = p;p--;{
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 tr2796:
-#line 121 "ext/ragel/url.rl"
+#line 125 "ext/ragel/url.rl"
 	{te = p;p--;{
-          //"<a href=\"mailto:#{text}\">#{display_text}</a>"
-          VALUE mailto;
-          VALUE email = rb_str_new(ts, te-ts);
+          VALUE email;
 
           if((linking_mode != 2) || in_anchor) {
-            rb_str_concat(output, email);
+            rb_str_cat(output, ts, te-ts);
           } else {
 
             if(blk != Qnil) {
-              mailto =  rb_funcall(blk, rb_intern("call"), 1, email);
+              email = rb_str_new(ts, te-ts);
+              rb_str_concat(output, rb_funcall(blk, call, 1, email));
             } else {
-              mailto = rb_str_new2("<a href=\"mailto:");
-              rb_str_concat(mailto, email);
-              rb_str_cat2(mailto, "\">");
-              rb_str_concat(mailto, email);
-              rb_str_cat2(mailto, "</a>");
+              rb_str_cat(output, "<a href=\"mailto:", 16);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "\">", 2);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "</a>", 4);
             }
-
-            rb_str_concat(output, mailto);
           }
         }}
 	goto st2849;
 tr2797:
 #line 105 "ext/ragel/url.rl"
 	{te = p;p--;{
-          VALUE anchor;
-          VALUE url = rb_str_new(ts, te-ts);
+          VALUE url;
 
           if((linking_mode != 1) || (in_anchor | in_email | in_img | in_object)) {
-            rb_str_concat(output, rb_str_new(ts, te-ts));
+            rb_str_cat(output, ts, te-ts);
           } else {
             if(blk != !Qnil) {
-              anchor =  rb_funcall(blk, rb_intern("call"), 1, url);;
+              url = rb_str_new(ts, te-ts);
+              rb_str_concat(output, rb_funcall(blk, call, 1, url));
             } else {
-              anchor = make_url(url);
+              rb_str_cat(output, "<a href=\"", 9);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "\">", 2);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "</a>", 4);
             }
-            rb_str_concat(output, anchor);
+            
           }
         }}
 	goto st2849;
@@ -256,7 +250,7 @@ tr2855:
 #line 65 "ext/ragel/url.rl"
 	{te = p;p--;{
           in_email = 1;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         }}
 	goto st2849;
 st2849:
@@ -267,7 +261,7 @@ st2849:
 case 2849:
 #line 1 "NONE"
 	{ts = p;}
-#line 271 "ext/ragelink/ragelink.c"
+#line 265 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 32u: goto tr2757;
 		case 33u: goto tr2758;
@@ -337,14 +331,14 @@ case 2849:
 tr2758:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2850;
 st2850:
 	if ( ++p == pe )
 		goto _test_eof2850;
 case 2850:
-#line 348 "ext/ragelink/ragelink.c"
+#line 342 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 33u: goto st0;
 		case 39u: goto st0;
@@ -441,14 +435,14 @@ case 3:
 tr5:
 #line 1 "NONE"
 	{te = p+1;}
-#line 121 "ext/ragel/url.rl"
+#line 125 "ext/ragel/url.rl"
 	{act = 10;}
 	goto st2851;
 st2851:
 	if ( ++p == pe )
 		goto _test_eof2851;
 case 2851:
-#line 452 "ext/ragelink/ragelink.c"
+#line 446 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 45u: goto tr5;
 		case 46u: goto st3;
@@ -465,14 +459,14 @@ case 2851:
 tr2759:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2852;
 st2852:
 	if ( ++p == pe )
 		goto _test_eof2852;
 case 2852:
-#line 476 "ext/ragelink/ragelink.c"
+#line 470 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 33u: goto st0;
 		case 39u: goto st0;
@@ -1028,7 +1022,7 @@ st2853:
 	if ( ++p == pe )
 		goto _test_eof2853;
 case 2853:
-#line 1032 "ext/ragelink/ragelink.c"
+#line 1026 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 46u: goto st8;
 		case 47u: goto tr936;
@@ -1090,7 +1084,7 @@ st2854:
 	if ( ++p == pe )
 		goto _test_eof2854;
 case 2854:
-#line 1094 "ext/ragelink/ragelink.c"
+#line 1088 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 37u: goto tr936;
 		case 40u: goto st13;
@@ -1224,7 +1218,7 @@ st2855:
 	if ( ++p == pe )
 		goto _test_eof2855;
 case 2855:
-#line 1228 "ext/ragelink/ragelink.c"
+#line 1222 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 37u: goto tr60;
 		case 43u: goto tr60;
@@ -1292,7 +1286,7 @@ st2856:
 	if ( ++p == pe )
 		goto _test_eof2856;
 case 2856:
-#line 1296 "ext/ragelink/ragelink.c"
+#line 1290 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 124u: goto tr466;
 		case 194u: goto st387;
@@ -1349,7 +1343,7 @@ st2857:
 	if ( ++p == pe )
 		goto _test_eof2857;
 case 2857:
-#line 1353 "ext/ragelink/ragelink.c"
+#line 1347 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 61u: goto tr2853;
 		case 124u: goto tr466;
@@ -1407,7 +1401,7 @@ st2858:
 	if ( ++p == pe )
 		goto _test_eof2858;
 case 2858:
-#line 1411 "ext/ragelink/ragelink.c"
+#line 1405 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 124u: goto tr127;
 		case 194u: goto st17;
@@ -1464,7 +1458,7 @@ st2859:
 	if ( ++p == pe )
 		goto _test_eof2859;
 case 2859:
-#line 1468 "ext/ragelink/ragelink.c"
+#line 1462 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 38u: goto st14;
 		case 124u: goto tr127;
@@ -1710,9 +1704,9 @@ st21:
 	if ( ++p == pe )
 		goto _test_eof21;
 case 21:
-	if ( 128u <= (*p) )
-		goto tr127;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto tr127;
 st22:
 	if ( ++p == pe )
 		goto _test_eof22;
@@ -4053,9 +4047,9 @@ st206:
 	if ( ++p == pe )
 		goto _test_eof206;
 case 206:
-	if ( 128u <= (*p) )
-		goto st15;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto st15;
 st207:
 	if ( ++p == pe )
 		goto _test_eof207;
@@ -6396,9 +6390,9 @@ st391:
 	if ( ++p == pe )
 		goto _test_eof391;
 case 391:
-	if ( 128u <= (*p) )
-		goto tr466;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto tr466;
 st392:
 	if ( ++p == pe )
 		goto _test_eof392;
@@ -8739,9 +8733,9 @@ st576:
 	if ( ++p == pe )
 		goto _test_eof576;
 case 576:
-	if ( 128u <= (*p) )
-		goto tr60;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto tr60;
 st577:
 	if ( ++p == pe )
 		goto _test_eof577;
@@ -11082,9 +11076,9 @@ st761:
 	if ( ++p == pe )
 		goto _test_eof761;
 case 761:
-	if ( 128u <= (*p) )
-		goto st13;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto st13;
 st762:
 	if ( ++p == pe )
 		goto _test_eof762;
@@ -13489,9 +13483,9 @@ st947:
 	if ( ++p == pe )
 		goto _test_eof947;
 case 947:
-	if ( 128u <= (*p) )
-		goto tr936;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto tr936;
 st948:
 	if ( ++p == pe )
 		goto _test_eof948;
@@ -15822,9 +15816,9 @@ st1131:
 	if ( ++p == pe )
 		goto _test_eof1131;
 case 1131:
-	if ( 128u <= (*p) )
-		goto st7;
-	goto tr0;
+	if ( (*p) <= 127u )
+		goto tr0;
+	goto st7;
 st1132:
 	if ( ++p == pe )
 		goto _test_eof1132;
@@ -18791,7 +18785,7 @@ st2860:
 	if ( ++p == pe )
 		goto _test_eof2860;
 case 2860:
-#line 18795 "ext/ragelink/ragelink.c"
+#line 18789 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 33u: goto st0;
 		case 39u: goto st0;
@@ -19375,7 +19369,7 @@ st2861:
 	if ( ++p == pe )
 		goto _test_eof2861;
 case 2861:
-#line 19379 "ext/ragelink/ragelink.c"
+#line 19373 "ext/ragelink/ragelink.c"
 	if ( (*p) == 45u )
 		goto st2;
 	if ( (*p) < 65u ) {
@@ -19395,7 +19389,7 @@ st2862:
 	if ( ++p == pe )
 		goto _test_eof2862;
 case 2862:
-#line 19399 "ext/ragelink/ragelink.c"
+#line 19393 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 47u: goto st1331;
 		case 97u: goto st1342;
@@ -19556,14 +19550,14 @@ case 1351:
 tr2761:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2863;
 st2863:
 	if ( ++p == pe )
 		goto _test_eof2863;
 case 2863:
-#line 19567 "ext/ragelink/ragelink.c"
+#line 19561 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 33u: goto st0;
 		case 39u: goto st0;
@@ -19856,7 +19850,7 @@ st2864:
 	if ( ++p == pe )
 		goto _test_eof2864;
 case 2864:
-#line 19860 "ext/ragelink/ragelink.c"
+#line 19854 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1358;
 		case 46u: goto st1357;
@@ -19934,7 +19928,7 @@ st2865:
 	if ( ++p == pe )
 		goto _test_eof2865;
 case 2865:
-#line 19938 "ext/ragelink/ragelink.c"
+#line 19932 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 194u: goto st1359;
 		case 195u: goto st1360;
@@ -20024,9 +20018,9 @@ st1363:
 	if ( ++p == pe )
 		goto _test_eof1363;
 case 1363:
-	if ( 128u <= (*p) )
-		goto tr1317;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto tr1317;
 st1364:
 	if ( ++p == pe )
 		goto _test_eof1364;
@@ -22336,7 +22330,7 @@ st2866:
 	if ( ++p == pe )
 		goto _test_eof2866;
 case 2866:
-#line 22340 "ext/ragelink/ragelink.c"
+#line 22334 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1358;
 		case 37u: goto tr2380;
@@ -22471,7 +22465,7 @@ st2867:
 	if ( ++p == pe )
 		goto _test_eof2867;
 case 2867:
-#line 22475 "ext/ragelink/ragelink.c"
+#line 22469 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1358;
 		case 37u: goto tr1504;
@@ -22540,7 +22534,7 @@ st2868:
 	if ( ++p == pe )
 		goto _test_eof2868;
 case 2868:
-#line 22544 "ext/ragelink/ragelink.c"
+#line 22538 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1358;
 		case 124u: goto tr1910;
@@ -22598,7 +22592,7 @@ st2869:
 	if ( ++p == pe )
 		goto _test_eof2869;
 case 2869:
-#line 22602 "ext/ragelink/ragelink.c"
+#line 22596 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1358;
 		case 61u: goto tr2917;
@@ -22657,7 +22651,7 @@ st2870:
 	if ( ++p == pe )
 		goto _test_eof2870;
 case 2870:
-#line 22661 "ext/ragelink/ragelink.c"
+#line 22655 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1358;
 		case 124u: goto tr1571;
@@ -22715,7 +22709,7 @@ st2871:
 	if ( ++p == pe )
 		goto _test_eof2871;
 case 2871:
-#line 22719 "ext/ragelink/ragelink.c"
+#line 22713 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 35u: goto st1358;
 		case 38u: goto st1545;
@@ -22962,9 +22956,9 @@ st1552:
 	if ( ++p == pe )
 		goto _test_eof1552;
 case 1552:
-	if ( 128u <= (*p) )
-		goto tr1571;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto tr1571;
 st1553:
 	if ( ++p == pe )
 		goto _test_eof1553;
@@ -25305,9 +25299,9 @@ st1737:
 	if ( ++p == pe )
 		goto _test_eof1737;
 case 1737:
-	if ( 128u <= (*p) )
-		goto st1546;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto st1546;
 st1738:
 	if ( ++p == pe )
 		goto _test_eof1738;
@@ -27648,9 +27642,9 @@ st1922:
 	if ( ++p == pe )
 		goto _test_eof1922;
 case 1922:
-	if ( 128u <= (*p) )
-		goto tr1910;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto tr1910;
 st1923:
 	if ( ++p == pe )
 		goto _test_eof1923;
@@ -29991,9 +29985,9 @@ st2107:
 	if ( ++p == pe )
 		goto _test_eof2107;
 case 2107:
-	if ( 128u <= (*p) )
-		goto tr1504;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto tr1504;
 st2108:
 	if ( ++p == pe )
 		goto _test_eof2108;
@@ -32334,9 +32328,9 @@ st2292:
 	if ( ++p == pe )
 		goto _test_eof2292;
 case 2292:
-	if ( 128u <= (*p) )
-		goto st1544;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto st1544;
 st2293:
 	if ( ++p == pe )
 		goto _test_eof2293;
@@ -34741,9 +34735,9 @@ st2478:
 	if ( ++p == pe )
 		goto _test_eof2478;
 case 2478:
-	if ( 128u <= (*p) )
-		goto tr2380;
-	goto tr58;
+	if ( (*p) <= 127u )
+		goto tr58;
+	goto tr2380;
 st2479:
 	if ( ++p == pe )
 		goto _test_eof2479;
@@ -37112,14 +37106,14 @@ case 2659:
 tr2762:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2872;
 st2872:
 	if ( ++p == pe )
 		goto _test_eof2872;
 case 2872:
-#line 37123 "ext/ragelink/ragelink.c"
+#line 37117 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 33u: goto st0;
 		case 39u: goto st0;
@@ -37381,7 +37375,7 @@ st2873:
 	if ( ++p == pe )
 		goto _test_eof2873;
 case 2873:
-#line 37385 "ext/ragelink/ragelink.c"
+#line 37379 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 33u: goto st0;
 		case 39u: goto st0;
@@ -37463,7 +37457,7 @@ st2874:
 	if ( ++p == pe )
 		goto _test_eof2874;
 case 2874:
-#line 37467 "ext/ragelink/ragelink.c"
+#line 37461 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 46u: goto st2664;
 		case 47u: goto tr936;
@@ -39907,14 +39901,14 @@ case 2848:
 tr2763:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2875;
 st2875:
 	if ( ++p == pe )
 		goto _test_eof2875;
 case 2875:
-#line 39918 "ext/ragelink/ragelink.c"
+#line 39912 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 170u: goto st7;
 		case 181u: goto st7;
@@ -39924,14 +39918,14 @@ case 2875:
 tr2764:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2876;
 st2876:
 	if ( ++p == pe )
 		goto _test_eof2876;
 case 2876:
-#line 39935 "ext/ragelink/ragelink.c"
+#line 39929 "ext/ragelink/ragelink.c"
 	if ( (*p) < 152u ) {
 		if ( 128u <= (*p) && (*p) <= 150u )
 			goto st7;
@@ -39944,54 +39938,54 @@ case 2876:
 tr2765:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2877;
 st2877:
 	if ( ++p == pe )
 		goto _test_eof2877;
 case 2877:
-#line 39955 "ext/ragelink/ragelink.c"
+#line 39949 "ext/ragelink/ragelink.c"
 	goto st7;
 tr2766:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2878;
 st2878:
 	if ( ++p == pe )
 		goto _test_eof2878;
 case 2878:
-#line 39967 "ext/ragelink/ragelink.c"
+#line 39961 "ext/ragelink/ragelink.c"
 	if ( 192u <= (*p) )
 		goto tr2795;
 	goto st7;
 tr2767:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2879;
 st2879:
 	if ( ++p == pe )
 		goto _test_eof2879;
 case 2879:
-#line 39981 "ext/ragelink/ragelink.c"
+#line 39975 "ext/ragelink/ragelink.c"
 	if ( (*p) <= 127u )
 		goto tr2795;
 	goto st7;
 tr2768:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2880;
 st2880:
 	if ( ++p == pe )
 		goto _test_eof2880;
 case 2880:
-#line 39995 "ext/ragelink/ragelink.c"
+#line 39989 "ext/ragelink/ragelink.c"
 	if ( (*p) == 173u )
 		goto tr2795;
 	if ( (*p) < 146u ) {
@@ -40009,14 +40003,14 @@ case 2880:
 tr2769:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2881;
 st2881:
 	if ( ++p == pe )
 		goto _test_eof2881;
 case 2881:
-#line 40020 "ext/ragelink/ragelink.c"
+#line 40014 "ext/ragelink/ragelink.c"
 	if ( (*p) == 133u )
 		goto st7;
 	if ( (*p) < 182u ) {
@@ -40031,14 +40025,14 @@ case 2881:
 tr2770:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2882;
 st2882:
 	if ( ++p == pe )
 		goto _test_eof2882;
 case 2882:
-#line 40042 "ext/ragelink/ragelink.c"
+#line 40036 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 134u: goto st7;
 		case 140u: goto st7;
@@ -40055,56 +40049,56 @@ case 2882:
 tr2771:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2883;
 st2883:
 	if ( ++p == pe )
 		goto _test_eof2883;
 case 2883:
-#line 40066 "ext/ragelink/ragelink.c"
+#line 40060 "ext/ragelink/ragelink.c"
 	if ( (*p) == 182u )
 		goto tr2795;
 	goto st7;
 tr2772:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2884;
 st2884:
 	if ( ++p == pe )
 		goto _test_eof2884;
 case 2884:
-#line 40080 "ext/ragelink/ragelink.c"
+#line 40074 "ext/ragelink/ragelink.c"
 	if ( 130u <= (*p) && (*p) <= 137u )
 		goto tr2795;
 	goto st7;
 tr2773:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2885;
 st2885:
 	if ( ++p == pe )
 		goto _test_eof2885;
 case 2885:
-#line 40094 "ext/ragelink/ragelink.c"
+#line 40088 "ext/ragelink/ragelink.c"
 	if ( 164u <= (*p) && (*p) <= 176u )
 		goto tr2795;
 	goto st7;
 tr2774:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2886;
 st2886:
 	if ( ++p == pe )
 		goto _test_eof2886;
 case 2886:
-#line 40108 "ext/ragelink/ragelink.c"
+#line 40102 "ext/ragelink/ragelink.c"
 	if ( (*p) > 152u ) {
 		if ( 154u <= (*p) && (*p) <= 160u )
 			goto tr2795;
@@ -40114,14 +40108,14 @@ case 2886:
 tr2775:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2887;
 st2887:
 	if ( ++p == pe )
 		goto _test_eof2887;
 case 2887:
-#line 40125 "ext/ragelink/ragelink.c"
+#line 40119 "ext/ragelink/ragelink.c"
 	if ( (*p) == 190u )
 		goto tr2795;
 	if ( (*p) > 175u ) {
@@ -40133,14 +40127,14 @@ case 2887:
 tr2776:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2888;
 st2888:
 	if ( ++p == pe )
 		goto _test_eof2888;
 case 2888:
-#line 40144 "ext/ragelink/ragelink.c"
+#line 40138 "ext/ragelink/ragelink.c"
 	if ( (*p) == 135u )
 		goto st7;
 	if ( (*p) < 132u ) {
@@ -40158,14 +40152,14 @@ case 2888:
 tr2777:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2889;
 st2889:
 	if ( ++p == pe )
 		goto _test_eof2889;
 case 2889:
-#line 40169 "ext/ragelink/ragelink.c"
+#line 40163 "ext/ragelink/ragelink.c"
 	if ( (*p) > 154u ) {
 		if ( 161u <= (*p) && (*p) <= 191u )
 			goto st7;
@@ -40175,14 +40169,14 @@ case 2889:
 tr2778:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2890;
 st2890:
 	if ( ++p == pe )
 		goto _test_eof2890;
 case 2890:
-#line 40186 "ext/ragelink/ragelink.c"
+#line 40180 "ext/ragelink/ragelink.c"
 	if ( (*p) < 153u ) {
 		if ( 128u <= (*p) && (*p) <= 151u )
 			goto st7;
@@ -40195,14 +40189,14 @@ case 2890:
 tr2779:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2891;
 st2891:
 	if ( ++p == pe )
 		goto _test_eof2891;
 case 2891:
-#line 40206 "ext/ragelink/ragelink.c"
+#line 40200 "ext/ragelink/ragelink.c"
 	if ( (*p) == 148u )
 		goto tr2795;
 	if ( (*p) < 176u ) {
@@ -40223,56 +40217,56 @@ case 2891:
 tr2780:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2892;
 st2892:
 	if ( ++p == pe )
 		goto _test_eof2892;
 case 2892:
-#line 40234 "ext/ragelink/ragelink.c"
+#line 40228 "ext/ragelink/ragelink.c"
 	if ( 144u <= (*p) && (*p) <= 191u )
 		goto st7;
 	goto tr2795;
 tr2781:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2893;
 st2893:
 	if ( ++p == pe )
 		goto _test_eof2893;
 case 2893:
-#line 40248 "ext/ragelink/ragelink.c"
+#line 40242 "ext/ragelink/ragelink.c"
 	if ( 141u <= (*p) )
 		goto st7;
 	goto tr2795;
 tr2782:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2894;
 st2894:
 	if ( ++p == pe )
 		goto _test_eof2894;
 case 2894:
-#line 40262 "ext/ragelink/ragelink.c"
+#line 40256 "ext/ragelink/ragelink.c"
 	if ( 178u <= (*p) )
 		goto tr2795;
 	goto st7;
 tr2783:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2895;
 st2895:
 	if ( ++p == pe )
 		goto _test_eof2895;
 case 2895:
-#line 40276 "ext/ragelink/ragelink.c"
+#line 40270 "ext/ragelink/ragelink.c"
 	if ( (*p) == 186u )
 		goto st7;
 	if ( (*p) > 170u ) {
@@ -40284,14 +40278,14 @@ case 2895:
 tr2784:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2896;
 st2896:
 	if ( ++p == pe )
 		goto _test_eof2896;
 case 2896:
-#line 40295 "ext/ragelink/ragelink.c"
+#line 40289 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 164u: goto st1149;
 		case 165u: goto st1150;
@@ -40325,14 +40319,14 @@ case 2896:
 tr2785:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2897;
 st2897:
 	if ( ++p == pe )
 		goto _test_eof2897;
 case 2897:
-#line 40336 "ext/ragelink/ragelink.c"
+#line 40330 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 128u: goto st1177;
 		case 129u: goto st1178;
@@ -40390,14 +40384,14 @@ case 2897:
 tr2786:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2898;
 st2898:
 	if ( ++p == pe )
 		goto _test_eof2898;
 case 2898:
-#line 40401 "ext/ragelink/ragelink.c"
+#line 40395 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 129u: goto st1217;
 		case 130u: goto st1218;
@@ -40420,14 +40414,14 @@ case 2898:
 tr2787:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2899;
 st2899:
 	if ( ++p == pe )
 		goto _test_eof2899;
 case 2899:
-#line 40431 "ext/ragelink/ragelink.c"
+#line 40425 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 128u: goto st1233;
 		case 129u: goto st1191;
@@ -40445,14 +40439,14 @@ case 2899:
 tr2788:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2900;
 st2900:
 	if ( ++p == pe )
 		goto _test_eof2900;
 case 2900:
-#line 40456 "ext/ragelink/ragelink.c"
+#line 40450 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 182u: goto st1240;
 		case 183u: goto tr2795;
@@ -40462,26 +40456,26 @@ case 2900:
 tr2789:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2901;
 st2901:
 	if ( ++p == pe )
 		goto _test_eof2901;
 case 2901:
-#line 40473 "ext/ragelink/ragelink.c"
+#line 40467 "ext/ragelink/ragelink.c"
 	goto st1129;
 tr2790:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2902;
 st2902:
 	if ( ++p == pe )
 		goto _test_eof2902;
 case 2902:
-#line 40485 "ext/ragelink/ragelink.c"
+#line 40479 "ext/ragelink/ragelink.c"
 	if ( (*p) == 191u )
 		goto st1243;
 	if ( 192u <= (*p) )
@@ -40490,14 +40484,14 @@ case 2902:
 tr2791:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2903;
 st2903:
 	if ( ++p == pe )
 		goto _test_eof2903;
 case 2903:
-#line 40501 "ext/ragelink/ragelink.c"
+#line 40495 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 128u: goto st1131;
 		case 146u: goto st1245;
@@ -40531,14 +40525,14 @@ case 2903:
 tr2792:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2904;
 st2904:
 	if ( ++p == pe )
 		goto _test_eof2904;
 case 2904:
-#line 40542 "ext/ragelink/ragelink.c"
+#line 40536 "ext/ragelink/ragelink.c"
 	if ( (*p) == 158u )
 		goto st1259;
 	if ( 159u <= (*p) )
@@ -40547,14 +40541,14 @@ case 2904:
 tr2793:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2905;
 st2905:
 	if ( ++p == pe )
 		goto _test_eof2905;
 case 2905:
-#line 40558 "ext/ragelink/ragelink.c"
+#line 40552 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 164u: goto st1131;
 		case 168u: goto st1261;
@@ -40582,14 +40576,14 @@ case 2905:
 tr2794:
 #line 1 "NONE"
 	{te = p+1;}
-#line 144 "ext/ragel/url.rl"
+#line 145 "ext/ragel/url.rl"
 	{act = 11;}
 	goto st2906;
 st2906:
 	if ( ++p == pe )
 		goto _test_eof2906;
 case 2906:
-#line 40593 "ext/ragelink/ragelink.c"
+#line 40587 "ext/ragelink/ragelink.c"
 	switch( (*p) ) {
 		case 144u: goto st1278;
 		case 146u: goto st1293;
@@ -46425,7 +46419,7 @@ case 2906:
 
 	}
 
-#line 180 "ext/ragel/url.rl"
+#line 169 "ext/ragel/url.rl"
   return output;
 }
 

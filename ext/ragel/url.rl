@@ -57,92 +57,93 @@ void Init_ragelink();
     start_object = "<object ";
     end_object = "</object>";
 
-    email_user_char = alnum | ['.!#\$%+\-];    
+    email_user_char = alnum | ['.!#\$%+\-];    #'
     email_host_char = alnum | "-";
     email = email_user_char+ "@" email_host_char+ ("." email_host_char+)+;
 
       main := |*
         start_email => {
           in_email = 1;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         };
 
         end_email => {
           in_email = 0;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         };
 
         start_anchor => {
           in_anchor = 1;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         };
 
         end_anchor => {
           in_anchor = 0;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         };
 
         start_img => {
           in_img = 1;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         };
 
         end_img => {
           in_img = 0;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         };
 
         start_object => {
           in_object = 1;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         };
 
         end_object => {
           in_object = 0;
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         };
 
         url => {
-          VALUE anchor;
-          VALUE url = rb_str_new(ts, te-ts);
+          VALUE url;
 
           if((linking_mode != 1) || (in_anchor | in_email | in_img | in_object)) {
-            rb_str_concat(output, rb_str_new(ts, te-ts));
+            rb_str_cat(output, ts, te-ts);
           } else {
             if(blk != !Qnil) {
-              anchor =  rb_funcall(blk, rb_intern("call"), 1, url);;
+              url = rb_str_new(ts, te-ts);
+              rb_str_concat(output, rb_funcall(blk, call, 1, url));
             } else {
-              anchor = make_url(url);
+              rb_str_cat(output, "<a href=\"", 9);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "\">", 2);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "</a>", 4);
             }
-            rb_str_concat(output, anchor);
+            
           }
         };
 
         email => {
-          //"<a href=\"mailto:#{text}\">#{display_text}</a>"
-          VALUE mailto;
-          VALUE email = rb_str_new(ts, te-ts);
+          VALUE email;
 
           if((linking_mode != 2) || in_anchor) {
-            rb_str_concat(output, email);
+            rb_str_cat(output, ts, te-ts);
           } else {
 
             if(blk != Qnil) {
-              mailto =  rb_funcall(blk, rb_intern("call"), 1, email);
+              email = rb_str_new(ts, te-ts);
+              rb_str_concat(output, rb_funcall(blk, call, 1, email));
             } else {
-              mailto = rb_str_new2("<a href=\"mailto:");
-              rb_str_concat(mailto, email);
-              rb_str_cat2(mailto, "\">");
-              rb_str_concat(mailto, email);
-              rb_str_cat2(mailto, "</a>");
+              rb_str_cat(output, "<a href=\"mailto:", 16);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "\">", 2);
+              rb_str_cat(output, ts, te-ts);
+              rb_str_cat(output, "</a>", 4);
             }
-
-            rb_str_concat(output, mailto);
           }
         };
 
         any => {
-          rb_str_concat(output, rb_str_new(ts, te-ts));
+          rb_str_cat(output, ts, te-ts);
         };
       *|;
     }%%
@@ -150,20 +151,8 @@ void Init_ragelink();
     %% write data;
 
 static VALUE 
-make_url(VALUE url) {
-  VALUE href = rb_str_new2("");
-  rb_str_cat2(href, "<a href=\"");
-  rb_str_concat(href, url);
-  rb_str_cat2(href, "\">");
-  rb_str_concat(href, url);
-  rb_str_cat2(href, "</a>");
-  return href;
-}
-
-
-static VALUE 
   autolink_ragel(VALUE data, int mode, VALUE blk) {
-  VALUE output = rb_str_new2("");
+  VALUE output = rb_str_new2(""), call = rb_intern("call");
   long cs = 0, act = 0;
   linking_mode = mode;
 
