@@ -99,18 +99,18 @@ void Init_ragelink();
         };
 
         url => {
-          VALUE link_text;
+          VALUE anchor;
           VALUE url = rb_str_new(ts, te-ts);
 
           if(in_anchor | in_email | in_img | in_object) {
             rb_str_concat(output, rb_str_new(ts, te-ts));
           } else {
             if(rb_block_given_p()) {
-              link_text =  rb_yield(url);
+              anchor =  rb_yield(url);
             } else {
-              link_text = url;
+              anchor = make_url(url);
             }
-            rb_str_concat(output, make_url(url, link_text));
+            rb_str_concat(output, anchor);
           }
         };
 
@@ -123,12 +123,12 @@ void Init_ragelink();
     %% write data;
 
 static VALUE 
-make_url(VALUE url, VALUE link_text) {
+make_url(VALUE url) {
   VALUE href = rb_str_new2("");
   rb_str_cat2(href, "<a href=\"");
   rb_str_concat(href, url);
   rb_str_cat2(href, "\">");
-  rb_str_concat(href, link_text);
+  rb_str_concat(href, url);
   rb_str_cat2(href, "</a>");
   return href;
 }

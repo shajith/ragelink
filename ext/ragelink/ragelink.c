@@ -24,12 +24,12 @@ static const int autolink_en_main = 2831;
 #line 124 "ext/ragel/url.rl"
 
 static VALUE 
-make_url(VALUE url, VALUE link_text) {
+make_url(VALUE url) {
   VALUE href = rb_str_new2("");
   rb_str_cat2(href, "<a href=\"");
   rb_str_concat(href, url);
   rb_str_cat2(href, "\">");
-  rb_str_concat(href, link_text);
+  rb_str_concat(href, url);
   rb_str_cat2(href, "</a>");
   return href;
 }
@@ -67,18 +67,18 @@ tr0:
 	{	switch( act ) {
 	case 9:
 	{{p = ((te))-1;}
-          VALUE link_text;
+          VALUE anchor;
           VALUE url = rb_str_new(ts, te-ts);
 
           if(in_anchor | in_email | in_img | in_object) {
             rb_str_concat(output, rb_str_new(ts, te-ts));
           } else {
             if(rb_block_given_p()) {
-              link_text =  rb_yield(url);
+              anchor =  rb_yield(url);
             } else {
-              link_text = url;
+              anchor = make_url(url);
             }
-            rb_str_concat(output, make_url(url, link_text));
+            rb_str_concat(output, anchor);
           }
         }
 	break;
@@ -93,18 +93,18 @@ tr0:
 tr198:
 #line 101 "ext/ragel/url.rl"
 	{{p = ((te))-1;}{
-          VALUE link_text;
+          VALUE anchor;
           VALUE url = rb_str_new(ts, te-ts);
 
           if(in_anchor | in_email | in_img | in_object) {
             rb_str_concat(output, rb_str_new(ts, te-ts));
           } else {
             if(rb_block_given_p()) {
-              link_text =  rb_yield(url);
+              anchor =  rb_yield(url);
             } else {
-              link_text = url;
+              anchor = make_url(url);
             }
-            rb_str_concat(output, make_url(url, link_text));
+            rb_str_concat(output, anchor);
           }
         }}
 	goto st2831;
@@ -185,18 +185,18 @@ tr2774:
 tr2775:
 #line 101 "ext/ragel/url.rl"
 	{te = p;p--;{
-          VALUE link_text;
+          VALUE anchor;
           VALUE url = rb_str_new(ts, te-ts);
 
           if(in_anchor | in_email | in_img | in_object) {
             rb_str_concat(output, rb_str_new(ts, te-ts));
           } else {
             if(rb_block_given_p()) {
-              link_text =  rb_yield(url);
+              anchor =  rb_yield(url);
             } else {
-              link_text = url;
+              anchor = make_url(url);
             }
-            rb_str_concat(output, make_url(url, link_text));
+            rb_str_concat(output, anchor);
           }
         }}
 	goto st2831;
@@ -483,9 +483,9 @@ st6:
 	if ( ++p == pe )
 		goto _test_eof6;
 case 6:
-	if ( (*p) <= 127u )
-		goto tr0;
-	goto st1;
+	if ( 128u <= (*p) )
+		goto st1;
+	goto tr0;
 st7:
 	if ( ++p == pe )
 		goto _test_eof7;
@@ -3707,9 +3707,9 @@ st199:
 	if ( ++p == pe )
 		goto _test_eof199;
 case 199:
-	if ( (*p) <= 127u )
-		goto tr198;
-	goto tr267;
+	if ( 128u <= (*p) )
+		goto tr267;
+	goto tr198;
 st200:
 	if ( ++p == pe )
 		goto _test_eof200;
@@ -6050,9 +6050,9 @@ st384:
 	if ( ++p == pe )
 		goto _test_eof384;
 case 384:
-	if ( (*p) <= 127u )
-		goto tr198;
-	goto st193;
+	if ( 128u <= (*p) )
+		goto st193;
+	goto tr198;
 st385:
 	if ( ++p == pe )
 		goto _test_eof385;
@@ -8393,9 +8393,9 @@ st569:
 	if ( ++p == pe )
 		goto _test_eof569;
 case 569:
-	if ( (*p) <= 127u )
-		goto tr198;
-	goto tr606;
+	if ( 128u <= (*p) )
+		goto tr606;
+	goto tr198;
 st570:
 	if ( ++p == pe )
 		goto _test_eof570;
@@ -15486,9 +15486,9 @@ st1125:
 	if ( ++p == pe )
 		goto _test_eof1125;
 case 1125:
-	if ( (*p) <= 127u )
-		goto tr198;
-	goto tr1076;
+	if ( 128u <= (*p) )
+		goto tr1076;
+	goto tr198;
 st1126:
 	if ( ++p == pe )
 		goto _test_eof1126;
@@ -21786,9 +21786,9 @@ st1535:
 	if ( ++p == pe )
 		goto _test_eof1535;
 case 1535:
-	if ( (*p) <= 127u )
-		goto tr198;
-	goto tr1552;
+	if ( 128u <= (*p) )
+		goto tr1552;
+	goto tr198;
 st1536:
 	if ( ++p == pe )
 		goto _test_eof1536;
@@ -24129,9 +24129,9 @@ st1720:
 	if ( ++p == pe )
 		goto _test_eof1720;
 case 1720:
-	if ( (*p) <= 127u )
-		goto tr198;
-	goto st1529;
+	if ( 128u <= (*p) )
+		goto st1529;
+	goto tr198;
 st1721:
 	if ( ++p == pe )
 		goto _test_eof1721;
@@ -28815,9 +28815,9 @@ st2090:
 	if ( ++p == pe )
 		goto _test_eof2090;
 case 2090:
-	if ( (*p) <= 127u )
-		goto tr198;
-	goto tr1485;
+	if ( 128u <= (*p) )
+		goto tr1485;
+	goto tr198;
 st2091:
 	if ( ++p == pe )
 		goto _test_eof2091;
@@ -31158,9 +31158,9 @@ st2275:
 	if ( ++p == pe )
 		goto _test_eof2275;
 case 2275:
-	if ( (*p) <= 127u )
-		goto tr198;
-	goto st1527;
+	if ( 128u <= (*p) )
+		goto st1527;
+	goto tr198;
 st2276:
 	if ( ++p == pe )
 		goto _test_eof2276;
@@ -33565,9 +33565,9 @@ st2461:
 	if ( ++p == pe )
 		goto _test_eof2461;
 case 2461:
-	if ( (*p) <= 127u )
-		goto tr198;
-	goto tr2361;
+	if ( 128u <= (*p) )
+		goto tr2361;
+	goto tr198;
 st2462:
 	if ( ++p == pe )
 		goto _test_eof2462;
