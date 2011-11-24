@@ -1,4 +1,4 @@
-require "ragelinker.so"
+require "ragelink.so"
 
 module Ragelink
   extend self
