@@ -2,7 +2,7 @@
 
 static VALUE Rlinker = Qnil;
 
-static int in_anchor, in_email, in_img, in_object;
+static int in_anchor, in_email, in_img, in_object, linking_mode;
 
 void Init_ragelink();
 
@@ -57,7 +57,7 @@ void Init_ragelink();
     start_object = "<object ";
     end_object = "</object>";
 
-    email_user_char = alnum | [.!#\$%+\-];
+    email_user_char = alnum | ['.!#\$%+\-];    
     email_host_char = alnum | "-";
     email = email_user_char+ "@" email_host_char+ ("." email_host_char+)+;
 
@@ -106,11 +106,11 @@ void Init_ragelink();
           VALUE anchor;
           VALUE url = rb_str_new(ts, te-ts);
 
-          if(in_anchor | in_email | in_img | in_object) {
+          if((linking_mode != 1) || (in_anchor | in_email | in_img | in_object)) {
             rb_str_concat(output, rb_str_new(ts, te-ts));
           } else {
-            if(rb_block_given_p()) {
-              anchor =  rb_yield(url);
+            if(blk != !Qnil) {
+              anchor =  rb_funcall(blk, rb_intern("call"), 1, url);;
             } else {
               anchor = make_url(url);
             }
@@ -120,22 +120,25 @@ void Init_ragelink();
 
         email => {
           //"<a href=\"mailto:#{text}\">#{display_text}</a>"
-          VALUE display_text;
+          VALUE mailto;
           VALUE email = rb_str_new(ts, te-ts);
 
-          if(rb_block_given_p()) {
-            display_text =  rb_yield(email);
+          if((linking_mode != 2) || in_anchor) {
+            rb_str_concat(output, email);
           } else {
-            display_text = email;
-          }
 
-          VALUE mailto = rb_str_new2("<a href=\"mailto:");
-          rb_str_concat(mailto, email);
-          rb_str_cat2(mailto, "\">");
-          rb_str_concat(mailto, display_text);
-          rb_str_cat2(mailto, "</a>");
-          
-          rb_str_concat(output, mailto);
+            if(blk != Qnil) {
+              mailto =  rb_funcall(blk, rb_intern("call"), 1, email);
+            } else {
+              mailto = rb_str_new2("<a href=\"mailto:");
+              rb_str_concat(mailto, email);
+              rb_str_cat2(mailto, "\">");
+              rb_str_concat(mailto, email);
+              rb_str_cat2(mailto, "</a>");
+            }
+
+            rb_str_concat(output, mailto);
+          }
         };
 
         any => {
@@ -157,11 +160,13 @@ make_url(VALUE url) {
   return href;
 }
 
+
 static VALUE 
-autolink_ragel(VALUE self, VALUE data) {
+  autolink_ragel(VALUE data, int mode, VALUE blk) {
   VALUE output = rb_str_new2("");
   long cs = 0, act = 0;
-  
+  linking_mode = mode;
+
   char *ts;
   char *te;
   unsigned char *p = RSTRING_PTR(data);
@@ -175,7 +180,32 @@ autolink_ragel(VALUE self, VALUE data) {
   return output;
 }
 
+static VALUE 
+autolink_ragel_urls(VALUE self, VALUE data) {
+  VALUE blk = Qnil;
+
+  if(rb_block_given_p()) {
+    blk = rb_block_proc();
+  }
+
+  return autolink_ragel(data, 1, blk);
+}
+
+static VALUE 
+autolink_ragel_emails(VALUE self, VALUE data) {
+  VALUE blk = Qnil;
+
+  if(rb_block_given_p()) {
+    blk = rb_block_proc();
+  }
+
+  return autolink_ragel(data, 2, blk);
+}
+
+
 void Init_ragelink() {
   Rlinker = rb_define_module("Ragelink");
-  rb_define_method(Rlinker, "autolink_ragel", autolink_ragel, 1);
+  rb_define_method(Rlinker, "autolink_ragel_urls", autolink_ragel_urls, 1);
+  rb_define_method(Rlinker, "autolink_ragel_emails", autolink_ragel_emails, 1);
+
 }
