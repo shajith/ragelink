@@ -12,54 +12,7 @@ void Init_ragelink();
 
     include WChar "unicode.rl";
 
-    scheme = ("http" | "https");
-    authority = "://";
-
-    start_email = alnum+ "@";
-    end_email = space;
-
-    char = ualnum;
-
-    host_char = (alnum | "-") - [_!];
-
-    host = host_char+ ('.' host_char+)*;
-
-    common_tld = "com" | "net" | "org" | "ly" | "co.uk" | "us" | "sk";
-
-    path_char = char | [|+@_~.%;=\-];
-
-    path_suffix = (path_char* (path_char - [.])) | (path_char* '(' path_char* ')' path_char*);
-
-    path = ("/" path_suffix?)* ;
-
-    param_char = char | [/-@.|];
-    param_key = param_char+;
-    param_value = param_char+;
-
-    fragment = "#" char+;
-
-    param = param_key "=" param_value;
-
-    params =  param_key | param? | (param ("&" param)*);
-
-    query = ("?" params);
-
-    bare_host = ("www" ('.' char+)+) | (char+ ('.' char+)* '.' common_tld);
-
-    url = (scheme authority host path query? fragment?) | (bare_host path query?);
-
-    start_anchor = "<a ";
-    end_anchor = "</a>";
-
-    start_img = "<img ";
-    end_img = "</img>";
-
-    start_object = "<object ";
-    end_object = "</object>";
-
-    email_user_char = alnum | ['.!#\$%+\-];    #'
-    email_host_char = alnum | "-";
-    email = email_user_char+ "@" email_host_char+ ("." email_host_char+)+;
+    include "url_productions.rl";
 
       main := |*
         start_email => {
@@ -108,7 +61,7 @@ void Init_ragelink();
           if((linking_mode != 1) || (in_anchor | in_email | in_img | in_object)) {
             rb_str_cat(output, ts, te-ts);
           } else {
-            if(blk != !Qnil) {
+            if(blk != Qnil) {
               url = rb_str_new(ts, te-ts);
               rb_str_concat(output, rb_funcall(blk, call, 1, url));
             } else {
@@ -118,7 +71,7 @@ void Init_ragelink();
               rb_str_cat(output, ts, te-ts);
               rb_str_cat(output, "</a>", 4);
             }
-            
+
           }
         };
 
@@ -150,8 +103,8 @@ void Init_ragelink();
 
     %% write data;
 
-static VALUE 
-  autolink_ragel(VALUE data, int mode, VALUE blk) {
+static VALUE
+autolink_ragel(VALUE data, int mode, VALUE blk) {
   VALUE output = rb_str_new2(""), call = rb_intern("call");
   long cs = 0, act = 0;
   linking_mode = mode;
@@ -169,7 +122,7 @@ static VALUE
   return output;
 }
 
-static VALUE 
+static VALUE
 autolink_ragel_urls(VALUE self, VALUE data) {
   VALUE blk = Qnil;
 
@@ -180,7 +133,7 @@ autolink_ragel_urls(VALUE self, VALUE data) {
   return autolink_ragel(data, 1, blk);
 }
 
-static VALUE 
+static VALUE
 autolink_ragel_emails(VALUE self, VALUE data) {
   VALUE blk = Qnil;
 
@@ -192,7 +145,8 @@ autolink_ragel_emails(VALUE self, VALUE data) {
 }
 
 
-void Init_ragelink() {
+void
+Init_ragelink() {
   Rlinker = rb_define_module("Ragelink");
   rb_define_method(Rlinker, "autolink_ragel_urls", autolink_ragel_urls, 1);
   rb_define_method(Rlinker, "autolink_ragel_emails", autolink_ragel_emails, 1);
