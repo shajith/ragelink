@@ -1,0 +1,21 @@
+tests:
+  urls:
+    - description: "Autolink URL with fragment"
+      text: "http://test.com/#foo"
+      expected: "<a href=\"http://test.com/#foo\">http://test.com/#foo</a>"
+
+    - description: "Autolink URL ending with ? followed by a fragment"
+      text: "http://test.com/?#foo"
+      expected: "<a href=\"http://test.com/?#foo\">http://test.com/?#foo</a>"
+
+    - description: "Autolink URL with @, . in query params"
+      text: "http://test.com/?find=io@canici.eu"
+      expected: "<a href=\"http://test.com/?find=io@canici.eu\">http://test.com/?find=io@canici.eu</a>"
+
+    - description: "Autolink URL with @, . in query params and a fragment"
+      text: "http://test.com/?find=io@canici.eu#foo"
+      expected: "<a href=\"http://test.com/?find=io@canici.eu#foo\">http://test.com/?find=io@canici.eu#foo</a>"
+
+    - description: "Autolink URL with a host:port domain name"
+      text: "http://test.com:3000/foo"
+      expected: "<a href=\"http://test.com:3000/foo\">http://test.com:3000/foo</a>"

@@ -1,0 +1,82 @@
+---
+tests:
+  urls:
+  - expected: Check out <a href="http://search.twitter.com/search?q=avro&amp;lang=en">http://search.twitter.com/search?q=avro&amp;lang=en</a>
+    text: Check out http://search.twitter.com/search?q=avro&lang=en
+    description: Autolink URL should link search urls (with &lang=, not &lang;)
+  - expected: "@user Try http://\xC2\xA0example.com/path"
+    text: "@user Try http://\xC2\xA0example.com/path"
+    description: Autolink URL should NOT link URLs with domains beginning in a non-breaking space (U+00A0)
+  - expected: !binary |
+      44GE44G+44Gq44Gr44GX44Gm44KLPGEgaHJlZj0iaHR0cDovL2V4YW1wbGUu
+      Y29tIj5odHRwOi8vZXhhbXBsZS5jb208L2E+44GE44G+44Gq44Gr44GX44Gm
+      44KL
+
+    text: !binary |
+      44GE44G+44Gq44Gr44GX44Gm44KLaHR0cDovL2V4YW1wbGUuY29t44GE44G+
+      44Gq44Gr44GX44Gm44KL
+
+    description: Autolink url in Japanese text
+  - expected: badly formatted http://foo!bar.com
+    text: badly formatted http://foo!bar.com
+    description: DO NOT Autolink url containing ! character in the domain
+  - expected: foo.org
+    text: foo.org
+    description: DO NOT Autolink URL without protocol and without www (ending in .org)
+  - expected: "I enjoy Macintosh Brand computers: <a href=\"http://\xE2\x9C\xAAdf.ws/ejp\">http://\xE2\x9C\xAAdf.ws/ejp</a>"
+    text: "I enjoy Macintosh Brand computers: http://\xE2\x9C\xAAdf.ws/ejp"
+    description: Autolink url containing unicode characters
+  - expected: www.example.biz
+    text: www.example.biz
+    description: DO NOT Autolink url without protocol (with www)
+  - expected: "example: <a href=\"http://twitter.com/otm_m\">http://twitter.com/otm_m</a>@\"onmousedown=\"alert('foo')\" style=background-color:yellow;color:yellow;\"/"
+    text: "example: http://twitter.com/otm_m@\"onmousedown=\"alert('foo')\" style=background-color:yellow;color:yellow;\"/"
+    description: Autolink URL should HTML escape the URL
+  - expected: text <a href="http://example.com">http://example.com</a>?
+    text: text http://example.com?
+    description: Autolink url followed by ? (without it)
+  - expected: text !http://example.com
+    text: text !http://example.com
+    description: DO NOT Autolink url preceded by !
+  - expected: See <a href="http://example.com">http://example.com</a> example.com
+    text: See http://example.com example.com
+    description: Autolink raw domain followed by domain only links the first
+  - expected: foo.com
+    text: foo.com
+    description: DO NOT Autolink URL without protocol and without www (ending in .com)
+  - expected: badly formatted http://foo_bar.com
+    text: badly formatted http://foo_bar.com
+    description: DO NOT Autolink url containing _ character in the domain
+  - expected: foo.net
+    text: foo.net
+    description: DO NOT Autolink URL without protocol and without www (ending in .net)
+  - expected: text =http://example.com
+    text: text =http://example.com
+    description: DO NOT Autolink url preceded by =
+  - expected: "See: www.twitter.com or twitter.com/twitter"
+    text: "See: www.twitter.com or twitter.com/twitter"
+    description: Autolink URL should not link URL without protocol
+  - expected: <a href="http://foo.com">http://foo.com</a> AND <a href="https://bar.com">https://bar.com</a> AND www.foobar.com
+    text: http://foo.com AND https://bar.com AND www.foobar.com
+    description: Multiple URLs with different protocols but not without a protocol
+  - expected: Is www.foo-bar.com a valid URL?
+    text: Is www.foo-bar.com a valid URL?
+    description: Autolink URL should NOT autolink a domain with a valid dash but no protocol
+  - expected: "@http://example.com"
+    text: "@http://example.com"
+    description: DO NOT Autolink url preceded by @
+  - expected: Is www.-foo.com a valid URL?
+    text: Is www.-foo.com a valid URL?
+    description: Autolink URL should NOT autolink www.-foo.com
+  - expected: foo.it twitter.co.jp foo.commerce foo.nettastic foo.us foo.co.uk
+    text: foo.it twitter.co.jp foo.commerce foo.nettastic foo.us foo.co.uk
+    description: Autolink URL without protocol and without www not ending in /.(edu|com|gov|org|net)/
+  - expected: "@user Try http:// example.com/path"
+    text: "@user Try http:// example.com/path"
+    description: Autolink URL should NOT link URLs with domains beginning in a space
+  - expected: I think it's proper to end sentences with a period <a href="http://tell.me/why?=because.i.want.it">http://tell.me/why?=because.i.want.it</a>. Even when they contain a URL.
+    text: I think it's proper to end sentences with a period http://tell.me/why?=because.i.want.it. Even when they contain a URL.
+    description: Autolink URL with a query followed by a period doesn't swallow the period.
+  - expected: text /http://example.com
+    text: text /http://example.com
+    description: DO NOT Autolink url preceded by /
