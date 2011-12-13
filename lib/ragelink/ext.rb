@@ -1,1 +1,1 @@
-require 'ragelink/ext/lib/ragelink.so'
+require 'ragelink/ext/ragelink.so'

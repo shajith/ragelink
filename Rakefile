@@ -4,7 +4,7 @@ require 'rake/extensiontask'
 
 Rake::ExtensionTask.new('ragelink') do |task|
   task.ext_dir = "lib/ragelink/ext"
-  task.lib_dir = "lib/ragelink/ext/lib"
+  task.lib_dir = "lib/ragelink/ext"
 end
 
 require 'rake/testtask'
