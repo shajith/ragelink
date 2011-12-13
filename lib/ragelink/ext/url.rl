@@ -1,6 +1,7 @@
 #include "ruby.h"
 
-static VALUE Rlinker = Qnil;
+static VALUE Ragelinker = Qnil;
+static VALUE ExtModule = Qnil;
 
 static int in_anchor, in_email, in_img, in_object, linking_mode;
 
@@ -10,9 +11,9 @@ void Init_ragelink();
     machine autolink;
     alphtype unsigned char;
 
-    include WChar "unicode.rl";
+    include WChar "../../ragel/unicode.rl";
 
-    include "url_productions.rl";
+    include "../../ragel/url_productions.rl";
 
       main := |*
         start_email => {
@@ -147,8 +148,10 @@ autolink_ragel_emails(VALUE self, VALUE data) {
 
 void
 Init_ragelink() {
-  Rlinker = rb_define_module("Ragelink");
-  rb_define_method(Rlinker, "autolink_ragel_urls", autolink_ragel_urls, 1);
-  rb_define_method(Rlinker, "autolink_ragel_emails", autolink_ragel_emails, 1);
+  Ragelinker = rb_define_module("Ragelink");
+  ExtModule  = rb_define_module_under(Ragelinker, "Ext");
+
+  rb_define_method(ExtModule, "autolink_ragel_urls", autolink_ragel_urls, 1);
+  rb_define_method(ExtModule, "autolink_ragel_emails", autolink_ragel_emails, 1);
 
 }

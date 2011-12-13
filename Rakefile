@@ -2,7 +2,10 @@ require "bundler/gem_tasks"
 
 require 'rake/extensiontask'
 
-Rake::ExtensionTask.new('ragelink')
+Rake::ExtensionTask.new('ragelink') do |task|
+  task.ext_dir = "lib/ragelink/ext"
+  task.lib_dir = "lib/ragelink/ext/lib"
+end
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
