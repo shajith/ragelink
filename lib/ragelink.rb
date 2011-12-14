@@ -1,5 +1,5 @@
 module Ragelink
-  if ENV['NO_EXT']
+  if ENV['NORUBYEXT']
     require "ragelink/pure"
     extend Pure
   else
